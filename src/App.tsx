@@ -1,5 +1,7 @@
+import TdfPage from './pages/fund/tdf'
+
 function App() {
-  return <>안녕하세요.</>
+  return <TdfPage />
 }
 
 export default App
