@@ -54,7 +54,7 @@ const slides: FullPageSlide[] = [
     content: (
       <TdfOverviewSlide
         eyebrow="TDF란?"
-        title="은퇴 시점에 맞춰 위험자산과 안전자산의 비중이 달라집니다."
+        title="20대의 투자와 60대의 투자, 같아도 괜찮을까요?"
         variant="allocation"
       />
     ),
@@ -69,7 +69,7 @@ const slides: FullPageSlide[] = [
     content: (
       <TdfOverviewSlide
         eyebrow="TDF란?"
-        title="생애주기에 따라 투자 비중을 자동으로 조절합니다."
+        title="20대의 투자와 60대의 투자, 같아도 괜찮을까요?"
         variant="definition"
       />
     ),
@@ -84,7 +84,7 @@ const slides: FullPageSlide[] = [
     content: (
       <TdfOverviewSlide
         eyebrow="TDF란?"
-        title="TDF를 구성하는 세 가지 핵심 전략"
+        title="20대의 투자와 60대의 투자, 같아도 괜찮을까요?"
         variant="features"
       />
     ),
@@ -114,7 +114,7 @@ const slides: FullPageSlide[] = [
     content: (
       <GlobalActiveSlide
         eyebrow="글로벌 액티브 TDF"
-        title="은퇴 전 생애주기에 맞는 자산 비중"
+        title="오랜 경험으로 든든하게, 세계에 나눠 담는 내 자산"
         variant="glide-before"
       />
     ),
@@ -129,7 +129,7 @@ const slides: FullPageSlide[] = [
     content: (
       <GlobalActiveSlide
         eyebrow="글로벌 액티브 TDF"
-        title="은퇴 후 생애주기에 맞는 자산 비중"
+        title="오랜 경험으로 든든하게, 세계에 나눠 담는 내 자산"
         variant="glide-after"
       />
     ),
@@ -144,7 +144,7 @@ const slides: FullPageSlide[] = [
     content: (
       <GlobalActiveSlide
         eyebrow="글로벌 액티브 TDF"
-        title="글로벌 액티브 TDF의 핵심 전략"
+        title="오랜 경험으로 든든하게, 세계에 나눠 담는 내 자산"
         variant="features"
       />
     ),
@@ -174,7 +174,7 @@ const slides: FullPageSlide[] = [
     content: (
       <GlobalEmpSlide
         eyebrow="글로벌 EMP TDF"
-        title="글로벌 EMP TDF의 세 가지 핵심 전략"
+        title="전 세계 분산투자! 글로벌 대표 ETF로 완성!"
         variant="features"
       />
     ),
@@ -204,7 +204,7 @@ const slides: FullPageSlide[] = [
     content: (
       <KoreaEmpSlide
         eyebrow="코리아 EMP TDF"
-        title="한국인을 위한 코리아 EMP TDF 핵심 전략"
+        title="국내 자산배분으로 한국인의 생애주기에 최적화된 TDF"
         variant="features"
       />
     ),

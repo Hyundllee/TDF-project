@@ -1,15 +1,33 @@
+import { ReactSVG } from 'react-svg'
+
+export interface StrategyCardItem {
+  title: string
+  description: string[]
+  icon?: string
+  symbol?: string
+}
+
 interface StrategyCardsProps {
-  items: string[]
+  items: StrategyCardItem[]
 }
 
 export default function StrategyCards({ items }: StrategyCardsProps) {
   return (
     <div className="strategy-grid">
       {items.map((item, index) => (
-        <article key={item}>
+        <article key={item.title}>
           <span>{String(index + 1).padStart(2, '0')}</span>
-          <h3>{item}</h3>
-          <p>장기 투자를 위한 체계적인 운용 전략을 제공합니다.</p>
+          {(item.icon || item.symbol) && (
+            <div className="strategy-grid__icon" aria-hidden="true">
+              {item.icon ? <ReactSVG src={item.icon} /> : item.symbol}
+            </div>
+          )}
+          <h3>{item.title}</h3>
+          <ul>
+            {item.description.map((description) => (
+              <li key={description}>{description}</li>
+            ))}
+          </ul>
         </article>
       ))}
     </div>

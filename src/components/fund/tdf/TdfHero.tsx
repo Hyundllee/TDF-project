@@ -1,25 +1,47 @@
-import { useEffect, useRef, useState } from 'react'
-import sliderPoint from '../../../assets/images/slider-point.svg'
-
-const heroImageModules = import.meta.glob<string>(
-  '../../../assets/images/tdf-[0-9][0-9].svg',
-  { eager: true, import: 'default', query: '?url' },
-)
-
-const heroImages = Object.fromEntries(
-  Object.entries(heroImageModules).map(([path, image]) => {
-    const age = path.match(/tdf-(\d{2})\.svg$/)?.[1]
-
-    return [age, image]
-  }),
-)
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { ReactSVG } from 'react-svg'
+import {
+  sliderPoint,
+  tdfHeroImages,
+  tdfHeroIcons,
+} from '../../../assets/images/fund/tdf'
 
 const lifeStages = [
-  { age: '20', pathProgress: 0.9 },
-  { age: '30', pathProgress: 0.77 },
-  { age: '40', pathProgress: 0.63 },
-  { age: '50', pathProgress: 0.3 },
-  { age: '60', pathProgress: 0.1 },
+  {
+    age: '20',
+    pathProgress: 0.9,
+    badgePosition: { left: '52%', right: '78%' },
+    left: { symbol: '🌱', text: '사회초년생' },
+    right: { icon: tdfHeroIcons.growth, text: '성장을 위한 투자에 집중' },
+  },
+  {
+    age: '30',
+    pathProgress: 0.77,
+    badgePosition: { left: '76%', right: '38%' },
+    left: { icon: tdfHeroIcons.plant, text: '자산성장기' },
+    right: { icon: tdfHeroIcons.rocket, text: '공격적인 자산 투자 도전' },
+  },
+  {
+    age: '40',
+    pathProgress: 0.63,
+    badgePosition: { left: '54%', right: '64%' },
+    left: { icon: tdfHeroIcons.pine, text: '자산안정기' },
+    right: { icon: tdfHeroIcons.safety, text: '노후를 위한 안전자산 비중 늘리기' },
+  },
+  {
+    age: '50',
+    pathProgress: 0.3,
+    badgePosition: { left: '76%', right: '48%' },
+    left: { icon: tdfHeroIcons.tree, text: '자산운용기' },
+    right: { icon: tdfHeroIcons.balance, text: '축적된 자산을 균형 있게 운용하기' },
+  },
+  {
+    age: '60',
+    pathProgress: 0.1,
+    badgePosition: { left: '36%', right: '60%' },
+    left: { icon: tdfHeroIcons.apple, text: '자산활용기' },
+    right: { icon: tdfHeroIcons.cash, text: '은퇴 후의 안정적인 현금흐름 확보' },
+  },
 ]
 
 export default function TdfHero() {
@@ -110,11 +132,41 @@ export default function TdfHero() {
         </div>
 
         <div className="tdf-hero__visual" aria-live="polite">
-          <img
+          <ReactSVG
             key={activeStage.age}
-            className="is-active"
-            src={heroImages[activeStage.age]}
-            alt={`${activeStage.age}대 TDF 투자 이미지`}
+            className="tdf-hero__image"
+            src={tdfHeroImages[activeStage.age]}
+            beforeInjection={(svg) => {
+              svg.setAttribute('role', 'img')
+              svg.setAttribute(
+                'aria-label',
+                `${activeStage.age}대 TDF 투자 이미지`,
+              )
+            }}
+          />
+        </div>
+
+        <div
+          key={`${activeStage.age}-labels`}
+          className="tdf-hero__highlights"
+          aria-live="polite"
+          style={
+            {
+              '--left-badge-top': activeStage.badgePosition.left,
+              '--right-badge-top': activeStage.badgePosition.right,
+            } as CSSProperties
+          }
+        >
+          <HighlightBadge
+            side="left"
+            icon={activeStage.left.icon}
+            symbol={activeStage.left.symbol}
+            text={activeStage.left.text}
+          />
+          <HighlightBadge
+            side="right"
+            icon={activeStage.right.icon}
+            text={activeStage.right.text}
           />
         </div>
       </div>
@@ -133,6 +185,24 @@ export default function TdfHero() {
         ))}
       </div>
       <span className="tdf-hero__scroll-guide" aria-hidden="true" />
+    </div>
+  )
+}
+
+interface HighlightBadgeProps {
+  side: 'left' | 'right'
+  icon?: string
+  symbol?: string
+  text: string
+}
+
+function HighlightBadge({ side, icon, symbol, text }: HighlightBadgeProps) {
+  return (
+    <div className={`tdf-hero__badge tdf-hero__badge--${side}`}>
+      <span className="tdf-hero__badge-icon" aria-hidden="true">
+        {icon ? <ReactSVG src={icon} /> : symbol}
+      </span>
+      <strong>{text}</strong>
     </div>
   )
 }

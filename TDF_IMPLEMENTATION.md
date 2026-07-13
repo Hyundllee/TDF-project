@@ -23,15 +23,24 @@ function App() {
 
 ```text
 src/
-├── assets/
-│   └── images/
-│       ├── slider-point.svg
-│       ├── tdf-20.svg
-│       ├── tdf-30.svg
-│       ├── tdf-40.svg
-│       ├── tdf-50.svg
-│       ├── tdf-60.svg
-│       └── tdf-curve.svg
+├── assets/images/fund/tdf/
+│   ├── index.ts
+│   ├── icon-apple.svg
+│   ├── icon-balance.svg
+│   ├── icon-cash.svg
+│   ├── icon-growth.svg
+│   ├── icon-pine.svg
+│   ├── icon-plant.svg
+│   ├── icon-rocket.svg
+│   ├── icon-safety.svg
+│   ├── icon-tree.svg
+│   ├── slider-point.svg
+│   ├── tdf-20.svg
+│   ├── tdf-30.svg
+│   ├── tdf-40.svg
+│   ├── tdf-50.svg
+│   ├── tdf-60.svg
+│   └── tdf-curve.svg
 ├── components/fund/tdf/
 │   ├── FullPageNavigator.tsx
 │   ├── PageProgress.tsx
@@ -95,16 +104,20 @@ src/
 1. 중앙 연령별 SVG 이미지
 2. 활성 탭 색상
 3. 곡선 위 포인트 위치
+4. 연령별 생애주기 단계 문구
+5. 연령별 투자 전략 문구와 아이콘
+
+강조 문구는 중앙 이미지 좌우에 배지로 표시되며 탭 전환 시 서로 반대 방향에서 fade/slide-in 된다.
 
 ### 이미지 관리
 
-연령별 SVG를 개별 import하지 않고 Vite의 `import.meta.glob`으로 자동 수집한다.
+연령별 SVG는 `src/assets/images/fund/tdf/index.ts`에서 한 번만 import하고 이미지 맵으로 export한다. `TdfHero.tsx`는 이 맵 하나와 `react-svg`의 `ReactSVG`를 사용한다. `public` 폴더와 Vite 전용 `import.meta.glob`은 사용하지 않는다.
 
 ```tsx
-const heroImageModules = import.meta.glob<string>(
-  '../../../assets/images/tdf-[0-9][0-9].svg',
-  { eager: true, import: 'default', query: '?url' },
-)
+import { ReactSVG } from 'react-svg'
+import { tdfHeroImages } from '../../../assets/images/fund/tdf'
+
+<ReactSVG src={tdfHeroImages[activeStage.age]} />
 ```
 
 파일명 규칙:
@@ -117,7 +130,7 @@ tdf-50.svg
 tdf-60.svg
 ```
 
-DOM에는 현재 선택된 이미지 한 개만 렌더링한다. 이미지가 교체될 때 fade 및 scale 애니메이션이 실행된다.
+DOM에는 현재 선택된 SVG 한 개만 `ReactSVG`로 인라인 렌더링한다. 이미지가 교체될 때 fade 및 scale 애니메이션이 실행된다.
 
 ### 곡선 포인트
 
