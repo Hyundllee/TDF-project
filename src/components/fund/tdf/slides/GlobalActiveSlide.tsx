@@ -8,14 +8,50 @@ interface GlobalActiveSlideProps extends ContentHeaderProps {
   variant: 'history' | 'glide-before' | 'glide-after' | 'features'
 }
 
-const historyItems = [
-  { date: '2016.4', label: '한국형 TDF\n2045 H · 2040 H', tone: 'magenta' },
-  { date: '2016.10', label: '한국형 TDF\n2015 H', tone: 'blue' },
-  { date: '2019.2', label: '한국형 TDF\n2050 H', tone: 'magenta' },
-  { date: '2019.12', label: '한국형 TDF\n2055 H', tone: 'blue' },
-  { date: '2024.8', label: '한국형 TDF\n2060 H · UH', tone: 'magenta' },
-  { date: '2025.9', label: '한국형 TDF\n2040 UH', tone: 'magenta' },
-  { date: '2026.4', label: '글로벌 액티브 TDF\n리브랜딩', tone: 'magenta' },
+type HistoryCard = {
+  date: string
+  lines: string[]
+  expanded?: boolean
+}
+
+type HistoryMilestone = {
+  tone: 'blue' | 'magenta'
+  top?: HistoryCard
+  bottom?: HistoryCard
+}
+
+const historyMilestones: HistoryMilestone[] = [
+  {
+    tone: 'magenta',
+    top: { date: '2025.9', lines: ['한국형 TDF', '2040 UH'] },
+    bottom: {
+      date: '2016.4',
+      lines: ['한국형 TDF', '2045 H', '2040 H', '2040 UH', '2035 H', '2030 H', '2025 H', '2020 H'],
+      expanded: true,
+    },
+  },
+  {
+    tone: 'blue',
+    bottom: { date: '2016.10', lines: ['한국형 TDF', '2015 H'] },
+  },
+  {
+    tone: 'magenta',
+    top: { date: '2019.2', lines: ['한국형 TDF', '2050 UH'] },
+    bottom: { date: '2019.2', lines: ['한국형 TDF', '2050 H'] },
+  },
+  {
+    tone: 'blue',
+    bottom: { date: '2019.12', lines: ['한국형 TDF', '2055 H'] },
+  },
+  {
+    tone: 'magenta',
+    top: { date: '2024.8', lines: ['한국형 TDF', '2060 UH'] },
+    bottom: { date: '2024.8', lines: ['한국형 TDF', '2060 H'] },
+  },
+  {
+    tone: 'magenta',
+    top: { date: '2026.4', lines: ['글로벌 액티브 TDF', '리브랜딩'] },
+  },
 ]
 
 const globalActiveStrategies = [
@@ -59,30 +95,62 @@ export default function GlobalActiveSlide({
       {variant === 'history' && (
         <div className="history-timeline">
           <ReactSVG className="history-timeline__rail" src={tdfContentImages.timeline.arrow} aria-hidden="true" />
-          {historyItems.map((item, index) => (
+          {historyMilestones.map((milestone, index) => (
             <article
-              key={`${item.date}-${item.label}`}
-              className={`history-timeline__item history-timeline__item--${item.tone}`}
+              key={`${milestone.top?.date ?? milestone.bottom?.date}-${index}`}
+              className={`history-timeline__milestone history-timeline__milestone--${milestone.tone}`}
               style={{ '--timeline-index': index } as CSSProperties}
             >
+              {milestone.top && (
+                <HistoryBox card={milestone.top} position="top" />
+              )}
               <ReactSVG
                 className="history-timeline__dot"
-                src={item.tone === 'blue' ? tdfContentImages.timeline.blueDot : tdfContentImages.timeline.magentaDot}
+                src={milestone.tone === 'blue' ? tdfContentImages.timeline.blueDot : tdfContentImages.timeline.magentaDot}
                 aria-hidden="true"
               />
-              <div>
-                <span>{item.date}</span>
-                <strong>{item.label.split('\n').map((line) => <span key={line}>{line}</span>)}</strong>
-              </div>
+              {milestone.bottom && (
+                <HistoryBox card={milestone.bottom} position="bottom" />
+              )}
             </article>
           ))}
-          <p>글로벌 액티브 TDF의 역사가 곧 한국 TDF의 역사.<br />은퇴자산의 적립부터 분배까지 아우르는 <b>Total Solution</b>을 제공합니다.</p>
+          <p>
+            글로벌액티브 TDF의 역사가 한국 TDF의 역사.<br />
+            은퇴자산의 적립부터 분배까지 아우르는 <b>Total Solution</b> 제공<br />
+            <strong>'연속성' 그리고 '다양성'</strong>
+          </p>
         </div>
       )}
 
       {isGlide && <GlideAllocation variant={variant} />}
 
       {variant === 'features' && <StrategyCards items={globalActiveStrategies} />}
+    </div>
+  )
+}
+
+function HistoryBox({
+  card,
+  position,
+}: {
+  card: HistoryCard
+  position: 'top' | 'bottom'
+}) {
+  return (
+    <div
+      className={`history-timeline__box history-timeline__box--${position}${card.expanded ? ' history-timeline__box--expanded' : ''}`}
+    >
+      <span className="history-timeline__date">{card.date}</span>
+      <strong>
+        {card.lines.map((line, index) => (
+          <span key={`${line}-${index}`}>
+            {line}
+            {card.expanded && line === '2040 UH' && (
+              <em>2025.9</em>
+            )}
+          </span>
+        ))}
+      </strong>
     </div>
   )
 }
