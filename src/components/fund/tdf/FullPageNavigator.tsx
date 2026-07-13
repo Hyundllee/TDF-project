@@ -24,6 +24,45 @@ interface FullPageNavigatorProps {
 }
 
 const TRANSITION_DELAY = 850
+const COMPACT_HEIGHT_QUERY = '(max-height: 820px)'
+const SCROLL_EDGE_THRESHOLD = 2
+
+function canScrollInDirection(element: HTMLElement, direction: 1 | -1) {
+  const maxScrollTop = element.scrollHeight - element.clientHeight
+
+  if (maxScrollTop <= SCROLL_EDGE_THRESHOLD) return false
+
+  return direction > 0
+    ? element.scrollTop < maxScrollTop - SCROLL_EDGE_THRESHOLD
+    : element.scrollTop > SCROLL_EDGE_THRESHOLD
+}
+
+function scrollWithin(
+  element: HTMLElement,
+  direction: 1 | -1,
+  distance: number,
+  behavior: ScrollBehavior = 'auto',
+) {
+  if (!canScrollInDirection(element, direction)) return false
+
+  const maxScrollTop = element.scrollHeight - element.clientHeight
+  const nextScrollTop = Math.min(
+    Math.max(element.scrollTop + distance * direction, 0),
+    maxScrollTop,
+  )
+
+  element.scrollTo({ top: nextScrollTop, behavior })
+  return true
+}
+
+function isEditableTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false
+
+  return (
+    target.matches('input, textarea, select') ||
+    target.isContentEditable
+  )
+}
 
 export default function FullPageNavigator({
   slides,
@@ -31,6 +70,7 @@ export default function FullPageNavigator({
 }: FullPageNavigatorProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const isMoving = useRef(false)
+  const slideRefs = useRef<Array<HTMLElement | null>>([])
 
   const moveTo = useCallback(
     (nextIndex: number) => {
@@ -50,22 +90,77 @@ export default function FullPageNavigator({
   )
 
   useEffect(() => {
+    const animationFrame = window.requestAnimationFrame(() => {
+      const activeSlide = slideRefs.current[activeIndex]
+      if (!activeSlide) return
+
+      activeSlide.scrollTop = 0
+    })
+
+    return () => window.cancelAnimationFrame(animationFrame)
+  }, [activeIndex])
+
+  useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
       if (Math.abs(event.deltaY) < 10) return
+
+      const direction = event.deltaY > 0 ? 1 : -1
       event.preventDefault()
-      moveTo(activeIndex + (event.deltaY > 0 ? 1 : -1))
+
+      if (window.matchMedia(COMPACT_HEIGHT_QUERY).matches) {
+        const sidebar =
+          event.target instanceof Element
+            ? event.target.closest<HTMLElement>('.tdf-sidebar')
+            : null
+
+        if (
+          sidebar &&
+          scrollWithin(sidebar, direction, Math.abs(event.deltaY))
+        ) {
+          return
+        }
+
+        const activeSlide = slideRefs.current[activeIndex]
+        if (
+          activeSlide &&
+          scrollWithin(activeSlide, direction, Math.abs(event.deltaY))
+        ) {
+          return
+        }
+      }
+
+      moveTo(activeIndex + direction)
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-        event.preventDefault()
-        moveTo(activeIndex + 1)
+      if (isEditableTarget(event.target)) return
+
+      const direction =
+        event.key === 'ArrowRight' || event.key === 'ArrowDown'
+          ? 1
+          : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+            ? -1
+            : 0
+
+      if (!direction) return
+
+      event.preventDefault()
+
+      if (window.matchMedia(COMPACT_HEIGHT_QUERY).matches) {
+        const activeSlide = slideRefs.current[activeIndex]
+        const scrollDistance = activeSlide
+          ? Math.max(activeSlide.clientHeight * 0.72, 1)
+          : 1
+
+        if (
+          activeSlide &&
+          scrollWithin(activeSlide, direction, scrollDistance, 'smooth')
+        ) {
+          return
+        }
       }
 
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-        event.preventDefault()
-        moveTo(activeIndex - 1)
-      }
+      moveTo(activeIndex + direction)
     }
 
     window.addEventListener('wheel', handleWheel, { passive: false })
@@ -103,6 +198,9 @@ export default function FullPageNavigator({
         {slides.map((slide, index) => (
           <section
             key={slide.id}
+            ref={(element) => {
+              slideRefs.current[index] = element
+            }}
             className={`fullpage__slide${index > 0 ? ' fullpage__slide--with-sidebar' : ''}${index === activeIndex ? ' is-active' : ''}`}
             aria-hidden={index !== activeIndex}
           >
