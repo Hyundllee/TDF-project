@@ -1,5 +1,3 @@
-import { ReactSVG } from 'react-svg'
-
 export interface StrategyCardItem {
   title: string
   description: string[]
@@ -19,7 +17,7 @@ export default function StrategyCards({ items }: StrategyCardsProps) {
           <span>{String(index + 1).padStart(2, '0')}</span>
           {(item.icon || item.symbol) && (
             <div className="strategy-grid__icon" aria-hidden="true">
-              {item.icon ? <ReactSVG src={item.icon} /> : item.symbol}
+              {item.icon ? <img src={item.icon} alt="" /> : item.symbol}
             </div>
           )}
           <h3>{item.title}</h3>

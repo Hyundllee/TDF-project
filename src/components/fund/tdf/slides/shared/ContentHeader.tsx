@@ -1,4 +1,3 @@
-import { ReactSVG } from 'react-svg'
 import { tdfContentImages } from '../../../../../assets/images/fund/tdf'
 
 export interface ContentHeaderProps {
@@ -13,7 +12,7 @@ export default function ContentHeader({
   return (
     <header className="content-header">
       <div className="content-header__breadcrumb">
-        <ReactSVG src={tdfContentImages.icons.home} aria-hidden="true" />
+        <img src={tdfContentImages.icons.home} alt="" />
         <span>연금투자</span>
         <i aria-hidden="true">›</i>
         <strong>삼성 TDF</strong>

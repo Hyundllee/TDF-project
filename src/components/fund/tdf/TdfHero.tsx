@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { ReactSVG } from 'react-svg'
 import {
   sliderPoint,
   tdfHeroImages,
@@ -121,6 +120,20 @@ export default function TdfHero() {
               strokeWidth="3"
               opacity="0.5"
             />
+          </svg>
+        </div>
+
+        <div className="tdf-hero__visual" aria-live="polite">
+          <img
+            key={activeStage.age}
+            className="tdf-hero__image"
+            src={tdfHeroImages[activeStage.age]}
+            alt={`${activeStage.age}대 TDF 투자 이미지`}
+          />
+        </div>
+
+        <div className="tdf-hero__point" aria-hidden="true">
+          <svg viewBox="0 0 1633 367" preserveAspectRatio="none">
             <image
               href={sliderPoint}
               x={point.x - 34}
@@ -129,21 +142,6 @@ export default function TdfHero() {
               height="68"
             />
           </svg>
-        </div>
-
-        <div className="tdf-hero__visual" aria-live="polite">
-          <ReactSVG
-            key={activeStage.age}
-            className="tdf-hero__image"
-            src={tdfHeroImages[activeStage.age]}
-            beforeInjection={(svg) => {
-              svg.setAttribute('role', 'img')
-              svg.setAttribute(
-                'aria-label',
-                `${activeStage.age}대 TDF 투자 이미지`,
-              )
-            }}
-          />
         </div>
 
         <div
@@ -200,7 +198,7 @@ function HighlightBadge({ side, icon, symbol, text }: HighlightBadgeProps) {
   return (
     <div className={`tdf-hero__badge tdf-hero__badge--${side}`}>
       <span className="tdf-hero__badge-icon" aria-hidden="true">
-        {icon ? <ReactSVG src={icon} /> : symbol}
+        {icon ? <img src={icon} alt="" /> : symbol}
       </span>
       <strong>{text}</strong>
     </div>

@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react'
-import { ReactSVG } from 'react-svg'
 import { tdfContentImages } from '../../../../assets/images/fund/tdf'
 import ContentHeader, { type ContentHeaderProps } from './shared/ContentHeader'
 import StrategyCards from './shared/StrategyCards'
@@ -94,7 +93,7 @@ export default function GlobalActiveSlide({
 
       {variant === 'history' && (
         <div className="history-timeline">
-          <ReactSVG className="history-timeline__rail" src={tdfContentImages.timeline.arrow} aria-hidden="true" />
+          <img className="history-timeline__rail" src={tdfContentImages.timeline.arrow} alt="" />
           {historyMilestones.map((milestone, index) => (
             <article
               key={`${milestone.top?.date ?? milestone.bottom?.date}-${index}`}
@@ -104,10 +103,10 @@ export default function GlobalActiveSlide({
               {milestone.top && (
                 <HistoryBox card={milestone.top} position="top" />
               )}
-              <ReactSVG
+              <img
                 className="history-timeline__dot"
                 src={milestone.tone === 'blue' ? tdfContentImages.timeline.blueDot : tdfContentImages.timeline.magentaDot}
-                aria-hidden="true"
+                alt=""
               />
               {milestone.bottom && (
                 <HistoryBox card={milestone.bottom} position="bottom" />

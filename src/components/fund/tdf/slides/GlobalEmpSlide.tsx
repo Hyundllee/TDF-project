@@ -1,4 +1,3 @@
-import { ReactSVG } from 'react-svg'
 import { tdfContentImages } from '../../../../assets/images/fund/tdf'
 import ContentHeader, { type ContentHeaderProps } from './shared/ContentHeader'
 import StrategyCards from './shared/StrategyCards'
@@ -45,12 +44,12 @@ export default function GlobalEmpSlide({
       {variant === 'intro' ? (
         <div className="quote-grid">
           <blockquote>
-            <ReactSVG src={tdfContentImages.portraits.warrenBuffett} aria-hidden="true" />
+            <img src={tdfContentImages.portraits.warrenBuffett} alt="" />
             <p>“저비용 인덱스 펀드는 대다수 투자자들에게 가장 합리적인 주식 투자 방법입니다. 장기적으로 시장 전체를 소유하는 원칙이 중요합니다.”</p>
             <strong>워렌 버핏, 2006</strong>
           </blockquote>
           <blockquote>
-            <ReactSVG src={tdfContentImages.portraits.johnBogle} aria-hidden="true" />
+            <img src={tdfContentImages.portraits.johnBogle} alt="" />
             <p>“시장을 이기려 하지 말고, 시장 전체를 소유하라. 수수료와 거래비용은 장기 복리 수익을 갉아먹습니다.”</p>
             <strong>존 보글, 『모든 주식을 소유하라』</strong>
           </blockquote>

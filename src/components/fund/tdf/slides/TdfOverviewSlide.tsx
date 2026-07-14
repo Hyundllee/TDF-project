@@ -1,4 +1,3 @@
-import { ReactSVG } from 'react-svg'
 import { tdfContentImages } from '../../../../assets/images/fund/tdf'
 import ContentHeader, { type ContentHeaderProps } from './shared/ContentHeader'
 import StrategyCards from './shared/StrategyCards'
@@ -106,12 +105,9 @@ function PersonVisual({ type, label }: PersonVisualProps) {
   return (
     <div className={`overview-character overview-character--${type}`}>
       <div className="overview-character__circle">
-        <ReactSVG
+        <img
           src={image}
-          beforeInjection={(svg) => {
-            svg.setAttribute('role', 'img')
-            svg.setAttribute('aria-label', isYoung ? '은퇴 이전의 젊은 투자자' : '은퇴 이후의 투자자')
-          }}
+          alt={isYoung ? '은퇴 이전의 젊은 투자자' : '은퇴 이후의 투자자'}
         />
       </div>
       {label && <strong>{label}</strong>}
