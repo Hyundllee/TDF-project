@@ -6,8 +6,12 @@ $navy: #080b98;
 $mint: #12c1bd;
 $background: #f2f5fb;
 
-body {
+html.tdf-fullpage-active,
+body.tdf-fullpage-active {
   overflow: hidden;
+}
+
+body.tdf-fullpage-active {
   color: #111;
   background: $background;
 }

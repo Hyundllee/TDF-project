@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react'
 import FullPageNavigator, {
   type FullPageSlide,
 } from '../../../components/fund/tdf/FullPageNavigator'
@@ -226,5 +227,17 @@ const slides: FullPageSlide[] = [
 ]
 
 export default function TdfPage() {
+  useLayoutEffect(() => {
+    const pageClassName = 'tdf-fullpage-active'
+
+    document.documentElement.classList.add(pageClassName)
+    document.body.classList.add(pageClassName)
+
+    return () => {
+      document.documentElement.classList.remove(pageClassName)
+      document.body.classList.remove(pageClassName)
+    }
+  }, [])
+
   return <FullPageNavigator slides={slides} menuItems={menuItems} />
 }
