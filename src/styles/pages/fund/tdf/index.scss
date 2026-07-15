@@ -817,9 +817,9 @@ body {
   }
 
   &--allocation {
-    width: min(100%, __vw(1300));
-    grid-template-columns: __vw(220) __vw(370) __vw(370) __vw(220);
-    gap: __vw(30);
+    width: min(100%, __vw(1270));
+    grid-template-columns: __vw(260) __vw(370) __vw(370) __vw(260);
+    gap: __vw(5);
 
     > p {
       margin-top: __vw(50);
@@ -885,38 +885,58 @@ body {
   position: relative;
   z-index: 2;
   display: grid;
-  min-height: __vw(220);
-  padding: __vw(36) __vw(38);
-  border-radius: __vw(22);
-  background: rgba(255, 255, 255, 0.84);
-  box-shadow: 0 __vw(14) __vw(38) rgba(45, 73, 135, 0.12);
-  gap: __vw(14);
-  backdrop-filter: blur(__vw(10));
+  width: __vw(310);
+  height: __vw(313);
+  justify-self: center;
+  place-items: center;
 
-  &::after {
+  &__glass {
     position: absolute;
-    bottom: __vw(-22);
-    width: 0;
-    height: 0;
-    border-top: __vw(25) solid rgba(255, 255, 255, 0.84);
-    border-right: __vw(18) solid transparent;
-    border-left: __vw(18) solid transparent;
-    content: '';
+    z-index: 0;
+    top: __vw(30);
+    left: __vw(34);
+    width: __vw(242);
+    height: __vw(223);
+    border-radius: __vw(24);
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(__vw(12));
+    -webkit-backdrop-filter: blur(__vw(12));
   }
 
-  &--young {
-    margin-right: __vw(-55);
+  &__shape {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    filter: drop-shadow(0 __vw(4) __vw(17) rgba(0, 0, 0, 0.07));
 
-    &::after {
-      right: __vw(45);
+    > div,
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
   }
 
-  &--senior {
-    margin-left: __vw(-55);
+  &__content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    width: __vw(235);
+    min-height: __vw(220);
+    transform: translateY(__vw(-15));
+    align-content: center;
+    gap: __vw(14);
+  }
 
-    &::after {
-      left: __vw(45);
+  &--young {
+    transform: translateX(__vw(62));
+  }
+
+  &--senior {
+    transform: translateX(__vw(-62));
+
+    .overview-callout__shape {
+      transform: scaleX(-1);
     }
   }
 

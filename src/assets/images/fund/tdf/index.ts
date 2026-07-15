@@ -23,6 +23,7 @@ import characterYoungTalking from './character-young-talking.svg'
 import glidePathArea from './glide-path-area.png'
 import portraitJohnBogle from './portrait-john-bogle.svg'
 import portraitWarrenBuffett from './portrait-warren-buffett.svg'
+import overviewCallout from './overview-callout.svg'
 import sliderPoint from './slider-point.svg'
 import tdf20 from './tdf-20.svg'
 import tdf30 from './tdf-30.svg'
@@ -61,6 +62,7 @@ export const tdfContentImages = {
     youngTalking: characterYoungTalking,
   },
   glidePathArea,
+  overviewCallout,
   portraits: {
     johnBogle: portraitJohnBogle,
     warrenBuffett: portraitWarrenBuffett,
