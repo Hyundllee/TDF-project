@@ -52,6 +52,7 @@ export const tdfContentImages = {
     youngTalking: imagePath('character-young-talking.svg'),
   },
   glidePathArea: imagePath('glide-path-area.png'),
+  calloutArrow: imagePath('callout-arrow.svg'),
   portraits: {
     johnBogle: imagePath('portrait-john-bogle.svg'),
     warrenBuffett: imagePath('portrait-warren-buffett.svg'),

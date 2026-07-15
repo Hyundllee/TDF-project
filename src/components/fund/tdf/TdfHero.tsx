@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   sliderPoint,
   tdfHeroImages,
@@ -9,35 +9,30 @@ const lifeStages = [
   {
     age: '20',
     pathProgress: 0.9,
-    badgePosition: { left: '52%', right: '78%' },
     left: { symbol: '🌱', text: '사회초년생' },
     right: { icon: tdfHeroIcons.growth, text: '성장을 위한 투자에 집중' },
   },
   {
     age: '30',
     pathProgress: 0.77,
-    badgePosition: { left: '76%', right: '38%' },
     left: { icon: tdfHeroIcons.plant, text: '자산성장기' },
     right: { icon: tdfHeroIcons.rocket, text: '공격적인 자산 투자 도전' },
   },
   {
     age: '40',
     pathProgress: 0.63,
-    badgePosition: { left: '54%', right: '64%' },
     left: { icon: tdfHeroIcons.pine, text: '자산안정기' },
     right: { icon: tdfHeroIcons.safety, text: '노후를 위한 안전자산 비중 늘리기' },
   },
   {
     age: '50',
     pathProgress: 0.3,
-    badgePosition: { left: '76%', right: '48%' },
     left: { icon: tdfHeroIcons.tree, text: '자산운용기' },
     right: { icon: tdfHeroIcons.balance, text: '축적된 자산을 균형 있게 운용하기' },
   },
   {
     age: '60',
     pathProgress: 0.1,
-    badgePosition: { left: '36%', right: '60%' },
     left: { icon: tdfHeroIcons.apple, text: '자산활용기' },
     right: { icon: tdfHeroIcons.cash, text: '은퇴 후의 안정적인 현금흐름 확보' },
   },
@@ -45,10 +40,18 @@ const lifeStages = [
 
 export default function TdfHero() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isImageReady, setIsImageReady] = useState(false)
   const [point, setPoint] = useState({ x: 253, y: 30 })
   const curvePathRef = useRef<SVGPathElement>(null)
   const currentProgressRef = useRef(lifeStages[0].pathProgress)
   const activeStage = lifeStages[activeIndex]
+
+  useEffect(() => {
+    Object.values(tdfHeroImages).forEach((src) => {
+      const image = new Image()
+      image.src = src
+    })
+  }, [])
 
   useEffect(() => {
     const path = curvePathRef.current
@@ -94,7 +97,7 @@ export default function TdfHero() {
         생애주기에 따라 투자 비중도 함께 변화합니다.
       </p>
 
-      <div className="tdf-hero__stage">
+      <div className={`tdf-hero__stage${isImageReady ? ' is-image-ready' : ''}`}>
         <div className="tdf-hero__curve" aria-hidden="true">
           <svg viewBox="0 0 1633 367" preserveAspectRatio="none">
             <defs>
@@ -126,34 +129,29 @@ export default function TdfHero() {
         <div className="tdf-hero__visual" aria-live="polite">
           <img
             key={activeStage.age}
-            className="tdf-hero__image"
+            className={`tdf-hero__image${isImageReady ? ' is-loaded' : ''}`}
             src={tdfHeroImages[activeStage.age]}
             alt={`${activeStage.age}대 TDF 투자 이미지`}
+            onLoad={() => setIsImageReady(true)}
           />
         </div>
 
         <div className="tdf-hero__point" aria-hidden="true">
-          <svg viewBox="0 0 1633 367" preserveAspectRatio="none">
-            <image
-              href={sliderPoint}
-              x={point.x - 34}
-              y={point.y - 34}
-              width="68"
-              height="68"
-            />
-          </svg>
+          <span
+            className="tdf-hero__point-decoration"
+            style={{
+              left: `${(point.x / 1633) * 100}%`,
+              top: `${(point.y / 367) * 100}%`,
+            }}
+          >
+            <img src={sliderPoint} alt="" />
+          </span>
         </div>
 
         <div
           key={`${activeStage.age}-labels`}
-          className="tdf-hero__highlights"
+          className={`tdf-hero__highlights tdf-hero__highlights--${activeStage.age}`}
           aria-live="polite"
-          style={
-            {
-              '--left-badge-top': activeStage.badgePosition.left,
-              '--right-badge-top': activeStage.badgePosition.right,
-            } as CSSProperties
-          }
         >
           <HighlightBadge
             side="left"
@@ -176,7 +174,10 @@ export default function TdfHero() {
             type="button"
             className={index === activeIndex ? 'is-active' : ''}
             aria-pressed={index === activeIndex}
-            onClick={() => setActiveIndex(index)}
+            onClick={() => {
+              setIsImageReady(false)
+              setActiveIndex(index)
+            }}
           >
             {stage.age}대
           </button>

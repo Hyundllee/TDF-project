@@ -52,17 +52,21 @@ export default function TdfOverviewSlide({
 
       {variant === 'allocation' && (
         <div className="overview-scene overview-scene--allocation">
-          <div className="overview-callout overview-callout--young">
-            <strong>은퇴 이전</strong>
-            <span>위험자산 <b className="is-up">↑</b></span>
-            <span>안전자산 <b className="is-down">↓</b></span>
+          <div className="overview-callout-wrap overview-callout-wrap--young">
+            <div className="overview-callout overview-callout--young">
+              <strong>은퇴 이전</strong>
+              <span>위험자산 <b className="is-up">↑</b></span>
+              <span>안전자산 <b className="is-down">↓</b></span>
+            </div>
           </div>
           <PersonVisual type="young" />
           <PersonVisual type="senior" />
-          <div className="overview-callout overview-callout--senior">
-            <strong>은퇴 이후</strong>
-            <span>위험자산 <b className="is-down">↓</b></span>
-            <span>안전자산 <b className="is-up">↑</b></span>
+          <div className="overview-callout-wrap overview-callout-wrap--senior">
+            <div className="overview-callout overview-callout--senior">
+              <strong>은퇴 이후</strong>
+              <span>위험자산 <b className="is-down">↓</b></span>
+              <span>안전자산 <b className="is-up">↑</b></span>
+            </div>
           </div>
           <p>그럼, 누군가 자동으로 내 생애주기에 맞춰<br />투자 비중을 조정해 준다면 어떨까요?</p>
         </div>

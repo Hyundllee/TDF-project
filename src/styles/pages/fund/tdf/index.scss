@@ -284,13 +284,29 @@ body.tdf-fullpage-active {
     aspect-ratio: 1633 / 367;
     pointer-events: none;
     transform: translate(-50%, -50%);
+  }
 
-    svg {
+  &__point-decoration {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: __vw(68);
+    height: __vw(68);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+
+    > img {
       display: block;
       width: 100%;
       height: 100%;
-      overflow: visible;
     }
+
+    // 필요한 가상 요소 스타일을 여기에 작성하면 됩니다.
+    // &::before,
+    // &::after {
+    //   position: absolute;
+    //   content: '';
+    // }
   }
 
   &__visual {
@@ -305,7 +321,11 @@ body.tdf-fullpage-active {
       width: 100%;
       height: 100%;
 
-      animation: hero-image-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      opacity: 0;
+
+      &.is-loaded {
+        animation: hero-image-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
     }
   }
 
@@ -313,7 +333,13 @@ body.tdf-fullpage-active {
     position: absolute;
     z-index: 2;
     inset: 0;
+    opacity: 0;
     pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
+  &__stage.is-image-ready &__highlights {
+    opacity: 1;
   }
 
   &__badge {
@@ -332,7 +358,6 @@ body.tdf-fullpage-active {
     will-change: opacity, filter, transform;
 
     &--left {
-      top: var(--left-badge-top);
       right: calc(50% + __vw(235));
       animation:
         hero-badge-left 950ms cubic-bezier(0.16, 1, 0.3, 1) both,
@@ -340,7 +365,6 @@ body.tdf-fullpage-active {
     }
 
     &--right {
-      top: var(--right-badge-top);
       left: calc(50% + __vw(235));
       animation:
         hero-badge-right 950ms 90ms cubic-bezier(0.16, 1, 0.3, 1) both,
@@ -352,6 +376,68 @@ body.tdf-fullpage-active {
       font-size: __vw(18);
       font-weight: 700;
       animation: hero-badge-text 720ms 190ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+  }
+
+  // 연령별 인트로 문구 위치
+  // left: 왼쪽 문구, right: 오른쪽 문구
+  &__highlights--20 {
+    .tdf-hero__badge--left {
+      top: __vw(187);
+      right: calc(50% + __vw(235));
+    }
+
+    .tdf-hero__badge--right {
+      top: __vw(281);
+      left: calc(50% + __vw(235));
+    }
+  }
+
+  &__highlights--30 {
+    .tdf-hero__badge--left {
+      top: __vw(274);
+      right: calc(50% + __vw(235));
+    }
+
+    .tdf-hero__badge--right {
+      top: __vw(137);
+      left: calc(50% + __vw(235));
+    }
+  }
+
+  &__highlights--40 {
+    .tdf-hero__badge--left {
+      top: __vw(194);
+      right: calc(50% + __vw(235));
+    }
+
+    .tdf-hero__badge--right {
+      top: __vw(230);
+      left: calc(50% + __vw(235));
+    }
+  }
+
+  &__highlights--50 {
+    .tdf-hero__badge--left {
+      top: __vw(274);
+      right: calc(50% + __vw(235));
+    }
+
+    .tdf-hero__badge--right {
+      top: __vw(173);
+      left: calc(50% + __vw(235));
+    }
+  }
+
+  &__highlights--60 {
+    .tdf-hero__badge--left {
+      top: __vw(130);
+      right: calc(50% + __vw(235));
+    }
+
+    .tdf-hero__badge--right {
+      top: __vw(216);
+      left: calc(50% + __vw(235));
     }
   }
 
@@ -888,44 +974,42 @@ body.tdf-fullpage-active {
   }
 }
 
-.overview-callout {
+.overview-callout-wrap {
   position: relative;
   z-index: 2;
-  display: grid;
-  min-height: __vw(220);
-  padding: __vw(36) __vw(38);
-  border-radius: __vw(22);
-  background: rgba(255, 255, 255, 0.84);
-  box-shadow: 0 __vw(14) __vw(38) rgba(45, 73, 135, 0.12);
-  gap: __vw(14);
-  backdrop-filter: blur(__vw(10));
+  width: __vw(242);
+  height: __vw(250);
 
-  &::after {
+  &::before {
     position: absolute;
-    bottom: __vw(-22);
-    width: 0;
-    height: 0;
-    border-top: __vw(25) solid rgba(255, 255, 255, 0.84);
-    border-right: __vw(18) solid transparent;
-    border-left: __vw(18) solid transparent;
+    z-index: 0;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.58);
     content: '';
+    filter: drop-shadow(0 __vw(14) __vw(30) rgba(45, 73, 135, 0.14));
+    -webkit-backdrop-filter: blur(__vw(24)) saturate(115%);
+    backdrop-filter: blur(__vw(24)) saturate(115%);
+    -webkit-mask: url('/assets/images/fund/tdf/bubble-box.svg') center / 100% 100% no-repeat;
+    mask: url('/assets/images/fund/tdf/bubble-box.svg') center / 100% 100% no-repeat;
   }
 
   &--young {
     margin-right: __vw(-55);
-
-    &::after {
-      right: __vw(45);
-    }
   }
 
   &--senior {
     margin-left: __vw(-55);
-
-    &::after {
-      left: __vw(45);
-    }
   }
+}
+
+.overview-callout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 100%;
+  height: 89.04%;
+  padding: __vw(36) __vw(38);
+  gap: __vw(14);
 
   strong {
     color: $blue;
