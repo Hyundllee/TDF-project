@@ -176,6 +176,16 @@ export default function FullPageNavigator({
   const activeSlide = slides[activeIndex]
   const activeMenuIndex = activeSlide?.menuIndex ?? 0
 
+  useEffect(() => {
+    const contentClassName = 'tdf-slides-content'
+
+    document.body.classList.toggle(contentClassName, showNavigation)
+
+    return () => {
+      document.body.classList.remove(contentClassName)
+    }
+  }, [showNavigation])
+
   const moveToMenu = (menuIndex: number) => {
     const targetIndex = slides.findIndex(
       (slide, index) => index > 0 && slide.menuIndex === menuIndex,
