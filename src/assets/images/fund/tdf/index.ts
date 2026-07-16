@@ -73,6 +73,7 @@ export const tdfContentImages = {
     rebalancingScale: imagePath('icon-rebalancing-scale.svg'),
     wonPuzzle: imagePath('icon-won-puzzle.svg'),
   },
+  overviewCallout: imagePath('overview-callout.svg'),
 }
 
 export const sliderPoint = imagePath('slider-point.svg')

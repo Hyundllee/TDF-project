@@ -1,4 +1,4 @@
-@import '../../../utility/function';
+@import '../../../utility/function.scss';
 
 $sidebar-width: __vw(305);
 $blue: #1763f5;
@@ -914,9 +914,9 @@ body.tdf-fullpage-active {
   }
 
   &--allocation {
-    width: min(100%, __vw(1300));
-    grid-template-columns: __vw(220) __vw(370) __vw(370) __vw(220);
-    gap: __vw(30);
+    width: min(100%, __vw(1282));
+    grid-template-columns: __vw(241) __vw(370) __vw(370) __vw(241);
+    gap: __vw(20);
 
     > p {
       margin-top: __vw(50);
@@ -977,28 +977,49 @@ body.tdf-fullpage-active {
 .overview-callout-wrap {
   position: relative;
   z-index: 2;
-  width: __vw(242);
-  height: __vw(250);
+  display: grid;
+  width: __vw(241);
+  height: __vw(244);
+  justify-self: center;
+  place-items: center;
 
-  &::before {
+  .overview-callout__glass {
     position: absolute;
     z-index: 0;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.58);
-    content: '';
-    filter: drop-shadow(0 __vw(14) __vw(30) rgba(45, 73, 135, 0.14));
-    -webkit-backdrop-filter: blur(__vw(24)) saturate(115%);
-    backdrop-filter: blur(__vw(24)) saturate(115%);
-    -webkit-mask: url('/assets/images/fund/tdf/bubble-box.svg') center / 100% 100% no-repeat;
-    mask: url('/assets/images/fund/tdf/bubble-box.svg') center / 100% 100% no-repeat;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 91.4%;
+    border-radius: __vw(24);
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(__vw(12));
+    -webkit-backdrop-filter: blur(__vw(12));
   }
 
-  &--young {
-    margin-right: __vw(-55);
+  .overview-callout__shape {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 __vw(4) __vw(17) rgba(0, 0, 0, 0.07));
+  }
+
+  .overview-callout__content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    width: calc(100% - __vw(60));
+    min-height: 91.4%;
+    align-content: center;
+    gap: __vw(14);
   }
 
   &--senior {
-    margin-left: __vw(-55);
+    .overview-callout__shape {
+      transform: scaleX(-1);
+    }
   }
 }
 
@@ -1007,8 +1028,8 @@ body.tdf-fullpage-active {
   z-index: 1;
   display: grid;
   width: 100%;
-  height: 89.04%;
-  padding: __vw(36) __vw(38);
+  height: 100%;
+  padding: 0;
   gap: __vw(14);
 
   strong {
@@ -1073,6 +1094,9 @@ body.tdf-fullpage-active {
     background: #dfe6eb;
 
     span {
+      --definition-travel: calc(#{__vw(58)} * -1);
+      --definition-delay: 0.34s;
+
       position: absolute;
       top: 50%;
       left: 65%;
@@ -1085,12 +1109,57 @@ body.tdf-fullpage-active {
     }
 
     &:nth-of-type(2) span {
+      --definition-travel: #{__vw(58)};
+      --definition-delay: 0.42s;
+
       left: 35%;
     }
 
     &:nth-of-type(3) span {
+      --definition-travel: calc(#{__vw(42)} * -1);
+      --definition-delay: 0.5s;
+
       left: 52%;
     }
+  }
+}
+
+.fullpage__slide.is-active .overview-definition > strong {
+  animation: definitionTitleReveal 0.78s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fullpage__slide.is-active .overview-definition i span {
+  animation: definitionKnobSlideIn 0.72s cubic-bezier(0.22, 1, 0.36, 1) var(--definition-delay) both;
+}
+
+@keyframes definitionTitleReveal {
+  0% {
+    transform: translateY(__vw(18)) scale(0.94);
+    opacity: 0;
+    box-shadow: 0 __vw(16) __vw(32) rgba(20, 84, 255, 0);
+  }
+
+  55% {
+    opacity: 1;
+    box-shadow: 0 __vw(12) __vw(26) rgba(20, 84, 255, 0.16);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    box-shadow: 0 __vw(6) __vw(16) rgba(20, 84, 255, 0.08);
+  }
+}
+
+@keyframes definitionKnobSlideIn {
+  0% {
+    transform: translate(calc(-50% + var(--definition-travel)), -50%);
+    opacity: 0.65;
+  }
+
+  100% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
   }
 }
 
@@ -1978,7 +2047,9 @@ body.tdf-fullpage-active {
 
   .tdf-hero__badge,
   .tdf-hero__badge-icon,
-  .tdf-hero__badge strong {
+  .tdf-hero__badge strong,
+  .overview-definition > strong,
+  .overview-definition i span {
     animation: none;
   }
 }
