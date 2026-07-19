@@ -1,4 +1,14 @@
 import { tdfContentImages } from '../../../../assets/images/fund/tdf'
+import comparisonArrow from '../../../../assets/images/fund/tdf/korea-comparison-arrow.svg'
+import comparisonFlag from '../../../../assets/images/fund/tdf/korea-comparison-flag.svg'
+import initialGlobalIcon from '../../../../assets/images/fund/tdf/korea-comparison-initial-global.svg'
+import initialKoreaIcon from '../../../../assets/images/fund/tdf/korea-comparison-initial-korea.svg'
+import investorGlobalIcon from '../../../../assets/images/fund/tdf/korea-comparison-investor-global.svg'
+import investorKoreaIcon from '../../../../assets/images/fund/tdf/korea-comparison-investor-korea.svg'
+import retirementGlobalIcon from '../../../../assets/images/fund/tdf/korea-comparison-retirement-global.svg'
+import retirementKoreaIcon from '../../../../assets/images/fund/tdf/korea-comparison-retirement-korea.svg'
+import targetGlobalIcon from '../../../../assets/images/fund/tdf/korea-comparison-target-global.svg'
+import targetKoreaIcon from '../../../../assets/images/fund/tdf/korea-comparison-target-korea.svg'
 import ContentHeader, { type ContentHeaderProps } from './shared/ContentHeader'
 import StrategyCards from './shared/StrategyCards'
 
@@ -46,29 +56,31 @@ export default function KoreaEmpSlide({
           <h3>한국 투자자의 특수성과 국내 자산의 효율성 극대화를 위한 한국형 전략</h3>
           <div className="korea-comparison__ratio">
             <strong>공통 위험자산 비중 구조</strong>
-            <span>초기 <b>79%</b></span><i>→</i>
-            <span>은퇴시점 <b>35.6%</b></span><i>→</i>
+            <span>초기 <b>79%</b></span>
+            <i><img src={comparisonArrow} alt="" /></i>
+            <span>은퇴시점 <b>35.6%</b></span>
+            <i><img src={comparisonArrow} alt="" /></i>
             <span>생애말 <b>23%</b></span>
           </div>
           <div className="comparison-grid">
             <ComparisonCard
               title="글로벌 글라이드 패스"
               rows={[
-                ['투자 대상', '전 세계 주식 · 채권 · 대체자산'],
-                ['초기 전략', '글로벌 분산 · 안정적 성장'],
-                ['은퇴시점 전략', '완만한 경사 · 안전자산 확대'],
-                ['이런 투자자에게', '단일 국가 리스크 헤지 · 전 세계 성장 편승'],
+                ['투자 대상', '전세계 주식 · 채권 · 대체자산', targetGlobalIcon],
+                ['초기 전략', '글로벌 분산 · 안정적 성장', initialGlobalIcon],
+                ['은퇴시점 전략', '완만한 경사 · 안전자산 확대', retirementGlobalIcon],
+                ['이런 투자자에게', '단일 국가 리스크 헤지 · 전세계 성장 편승', investorGlobalIcon],
               ]}
             />
             <ComparisonCard
               title="코리아 글라이드 패스"
-              badge="🇰🇷 한국형 전략"
+              badge="한국형 전략"
               highlighted
               rows={[
-                ['투자 대상', '국내 주식 및 채권 중심'],
-                ['초기 전략', '위험자산 비중 확대 · 수익성 극대화'],
-                ['은퇴시점 전략', '가파른 감소 · 자산보호 강화'],
-                ['이런 투자자에게', '국내 경제성장 활용 · 형성기 적극, 은퇴기 보존'],
+                ['투자 대상', '국내 주식 및 채권 중심', targetKoreaIcon],
+                ['초기 전략', '위험자산 비중↑ · 수익성 극대화', initialKoreaIcon],
+                ['은퇴시점 전략', '가파른 감소 · 자산보호 강화', retirementKoreaIcon],
+                ['이런 투자자에게', '국내 경제성장 활용 · 형성기엔 적극, 은퇴기엔 보존', investorKoreaIcon],
               ]}
             />
           </div>
@@ -84,18 +96,29 @@ interface ComparisonCardProps {
   title: string
   badge?: string
   highlighted?: boolean
-  rows: string[][]
+  rows: [string, string, string][]
 }
 
 function ComparisonCard({ title, badge, highlighted, rows }: ComparisonCardProps) {
   return (
-    <article className={highlighted ? 'is-highlighted' : undefined}>
-      <h4>{title} {badge && <span>{badge}</span>}</h4>
+    <article className={`comparison-card${highlighted ? ' is-highlighted' : ''}`}>
+      <h4>
+        {title}
+        {badge && (
+          <span>
+            <img src={comparisonFlag} alt="" />
+            {badge}
+          </span>
+        )}
+      </h4>
       <dl>
-        {rows.map(([term, description]) => (
+        {rows.map(([term, description, icon]) => (
           <div key={term}>
-            <dt>{term}</dt>
-            <dd>{description}</dd>
+            <img src={icon} alt="" />
+            <div>
+              <dt>{term}</dt>
+              <dd>{description}</dd>
+            </div>
           </div>
         ))}
       </dl>

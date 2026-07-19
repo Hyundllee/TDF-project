@@ -172,8 +172,8 @@ export default function FullPageNavigator({
     }
   }, [activeIndex, moveTo])
 
-  const showNavigation = activeIndex > 0
   const activeSlide = slides[activeIndex]
+  const showNavigation = (activeSlide?.menuIndex ?? -1) >= 0
   const activeMenuIndex = activeSlide?.menuIndex ?? 0
 
   useEffect(() => {
@@ -211,7 +211,7 @@ export default function FullPageNavigator({
             ref={(element) => {
               slideRefs.current[index] = element
             }}
-            className={`fullpage__slide${index > 0 ? ' fullpage__slide--with-sidebar' : ''}${index === activeIndex ? ' is-active' : ''}`}
+            className={`fullpage__slide${slide.menuIndex >= 0 ? ' fullpage__slide--with-sidebar' : ''}${index === activeIndex ? ' is-active' : ''}`}
             aria-hidden={index !== activeIndex}
           >
             {slide.content}

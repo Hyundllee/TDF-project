@@ -26,10 +26,19 @@ export default function GlidePathSlide({ eyebrow, title }: ContentHeaderProps) {
           <span>대상고객<sup>***</sup></span>
         </div>
         <div className="ratio-chart__bars">
-          {glidePathData.map((item) => (
+          {glidePathData.map((item, index) => (
             <div key={item.fund}>
               <small>{item.year}</small>
-              <i style={{ height: `${item.ratio}%` }}><b>{item.ratio}%</b></i>
+              <div className="ratio-chart__bar-cell">
+                <i
+                  style={{
+                    height: `${item.ratio}%`,
+                    animationDelay: `${index * 45}ms`,
+                  }}
+                >
+                  <b>{item.ratio}%</b>
+                </i>
+              </div>
               <span>{item.fund}</span>
               <span>{item.target}</span>
             </div>

@@ -8,6 +8,7 @@ import {
   GlobalActiveSlide,
   GlobalEmpSlide,
   KoreaEmpSlide,
+  QnaSlide,
   TdfOverviewSlide,
 } from '../../../components/fund/tdf/slides'
 import '../../../styles/pages/fund/tdf/index.scss'
@@ -208,6 +209,15 @@ const slides: FullPageSlide[] = [
         title="시간이 지나면 내 자산은 어떻게 변할까요?"
       />
     ),
+  },
+  {
+    id: 'qna',
+    menuIndex: -1,
+    progressGroup: 0,
+    progressGroupTotal: 0,
+    progressStep: 0,
+    progressStepTotal: 0,
+    content: <QnaSlide />,
   },
 ]
 
