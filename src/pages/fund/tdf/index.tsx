@@ -106,32 +106,17 @@ const slides: FullPageSlide[] = [
     ),
   },
   {
-    id: 'global-active-glide-before',
+    id: 'global-active-glide',
     menuIndex: 1,
     progressGroup: 2,
     progressGroupTotal: 3,
     progressStep: 1,
-    progressStepTotal: 2,
+    progressStepTotal: 1,
     content: (
       <GlobalActiveSlide
         eyebrow="글로벌 액티브 TDF"
         title="오랜 경험으로 든든하게, 세계에 나눠 담는 내 자산"
-        variant="glide-before"
-      />
-    ),
-  },
-  {
-    id: 'global-active-glide-after',
-    menuIndex: 1,
-    progressGroup: 2,
-    progressGroupTotal: 3,
-    progressStep: 2,
-    progressStepTotal: 2,
-    content: (
-      <GlobalActiveSlide
-        eyebrow="글로벌 액티브 TDF"
-        title="오랜 경험으로 든든하게, 세계에 나눠 담는 내 자산"
-        variant="glide-after"
+        variant="glide"
       />
     ),
   },

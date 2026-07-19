@@ -1,11 +1,35 @@
-import type { CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { tdfContentImages } from '../../../../assets/images/fund/tdf'
+import allocationDetailBracket from '../../../../assets/images/fund/tdf/allocation-detail-bracket.svg'
 import ContentHeader, { type ContentHeaderProps } from './shared/ContentHeader'
 import StrategyCards from './shared/StrategyCards'
 
 interface GlobalActiveSlideProps extends ContentHeaderProps {
-  variant: 'history' | 'glide-before' | 'glide-after' | 'features'
+  variant: 'history' | 'glide' | 'features'
 }
+
+type AllocationPoint = {
+  axisLabel: string
+  year: string
+  phase: '전' | '후' | '시점'
+  stock: number
+  activeStock: number
+  coreStock: number
+  bond: number
+}
+
+const allocationPoints: AllocationPoint[] = [
+  { axisLabel: '은퇴 -35년', year: '-35', phase: '전', stock: 79, activeStock: 59, coreStock: 20, bond: 21 },
+  { axisLabel: '-30년', year: '-30', phase: '전', stock: 78, activeStock: 58, coreStock: 20, bond: 22 },
+  { axisLabel: '-25년', year: '-25', phase: '전', stock: 73.4, activeStock: 56.9, coreStock: 16.5, bond: 26.6 },
+  { axisLabel: '-20년', year: '-20', phase: '전', stock: 69, activeStock: 54, coreStock: 15, bond: 31 },
+  { axisLabel: '-15년', year: '-15', phase: '전', stock: 64, activeStock: 50, coreStock: 14, bond: 36 },
+  { axisLabel: '-10년', year: '-10', phase: '전', stock: 59, activeStock: 46, coreStock: 13, bond: 41 },
+  { axisLabel: '-5년', year: '-5', phase: '전', stock: 52, activeStock: 42, coreStock: 10, bond: 48 },
+  { axisLabel: '은퇴', year: '0', phase: '시점', stock: 35.6, activeStock: 30.6, coreStock: 5, bond: 64.4 },
+  { axisLabel: '+5년', year: '+5', phase: '후', stock: 32.4, activeStock: 28.8, coreStock: 3.6, bond: 67.6 },
+  { axisLabel: '은퇴 +10년', year: '+10', phase: '후', stock: 30, activeStock: 27, coreStock: 3, bond: 70 },
+]
 
 type HistoryCard = {
   date: string
@@ -85,8 +109,6 @@ export default function GlobalActiveSlide({
   title,
   variant,
 }: GlobalActiveSlideProps) {
-  const isGlide = variant === 'glide-before' || variant === 'glide-after'
-
   return (
     <div className={`content-slide content-slide--global-active content-slide--global-active-${variant}`}>
       <ContentHeader eyebrow={eyebrow} title={title} />
@@ -121,7 +143,7 @@ export default function GlobalActiveSlide({
         </div>
       )}
 
-      {isGlide && <GlideAllocation variant={variant} />}
+      {variant === 'glide' && <GlideAllocation />}
 
       {variant === 'features' && <StrategyCards items={globalActiveStrategies} />}
     </div>
@@ -154,29 +176,130 @@ function HistoryBox({
   )
 }
 
-function GlideAllocation({ variant }: { variant: 'glide-before' | 'glide-after' }) {
-  const isBefore = variant === 'glide-before'
-  const selected = isBefore ? '-25' : '+5'
+function formatRatio(value: number) {
+  return `${Number.isInteger(value) ? value : value.toFixed(1)}%`
+}
+
+function AnimatedRatio({ value }: { value: number }) {
+  const [displayValue, setDisplayValue] = useState(0)
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let animationFrame = 0
+
+    if (reduceMotion) {
+      animationFrame = window.requestAnimationFrame(() => setDisplayValue(value))
+      return () => window.cancelAnimationFrame(animationFrame)
+    }
+
+    const startedAt = performance.now()
+    const duration = 680
+
+    const count = (now: number) => {
+      const progress = Math.min((now - startedAt) / duration, 1)
+      const easedProgress = 1 - Math.pow(1 - progress, 3)
+
+      setDisplayValue(value * easedProgress)
+
+      if (progress < 1) {
+        animationFrame = window.requestAnimationFrame(count)
+      }
+    }
+
+    animationFrame = window.requestAnimationFrame(count)
+
+    return () => window.cancelAnimationFrame(animationFrame)
+  }, [value])
+
+  const normalizedValue = Number.isInteger(value)
+    ? Math.round(displayValue)
+    : Math.round(displayValue * 10) / 10
+
+  return <>{formatRatio(normalizedValue)}</>
+}
+
+function GlideAllocation() {
+  const [activeIndex, setActiveIndex] = useState(2)
+  const selected = allocationPoints[activeIndex]
+  const focusPosition = (activeIndex + 0.5) * 10
+  const chartStyle = {
+    '--allocation-focus-left': `${focusPosition}%`,
+  } as CSSProperties
+
+  const timingCopy = selected.phase === '시점'
+    ? <>나의 <b>은퇴 시점</b>,</>
+    : <>나의 은퇴 {selected.phase} <b>{selected.year}년</b>,</>
 
   return (
-    <div className={`allocation-chart allocation-chart--${isBefore ? 'before' : 'after'}`}>
-      <div className="allocation-chart__plot">
-        <span className="allocation-chart__unit">100(%)</span>
-        <img src={tdfContentImages.glidePathArea} alt="은퇴 시점에 따른 주식과 채권 비중 변화 그래프" />
-        <i className="allocation-chart__retirement">은퇴</i>
-        <i className="allocation-chart__selected">{selected}</i>
+    <div
+      className={`allocation-chart${selected.phase === '시점' ? ' is-retirement-selected' : ''}`}
+      style={chartStyle}
+    >
+      <div className="allocation-chart__plot-wrap">
+        <div className="allocation-chart__y-axis" aria-hidden="true">
+          <span>100(%)</span>
+          <span>80</span>
+          <span>60</span>
+          <span>40</span>
+          <span>20</span>
+          <span>0</span>
+        </div>
+        <div className="allocation-chart__plot">
+          <img src={tdfContentImages.glidePathArea} alt="은퇴 시점에 따른 주식과 채권 비중 변화 그래프" />
+          <span className="allocation-chart__retirement-line" aria-hidden="true" />
+          <span className="allocation-chart__focus" aria-hidden="true">
+            <i />
+          </span>
+        </div>
       </div>
-      <div className="allocation-chart__axis" aria-hidden="true">
-        {['은퇴 -35년', '-30', '-25', '-20', '-15', '-10', '-5', '은퇴', '+5', '은퇴 +10년'].map((label) => <span key={label}>{label}</span>)}
+
+      <div className="allocation-chart__axis" aria-label="은퇴 시점 선택">
+        {allocationPoints.map((point, index) => (
+          <button
+            key={point.axisLabel}
+            type="button"
+            className={index === activeIndex ? 'is-active' : ''}
+            aria-pressed={index === activeIndex}
+            onClick={() => setActiveIndex(index)}
+          >
+            {point.axisLabel}
+          </button>
+        ))}
       </div>
+
       <div className="allocation-chart__summary">
-        <p>나의 은퇴 {isBefore ? '전' : '후'} <b>{selected}년</b>,<br />생애주기에 맞는 자산 비중은?</p>
-        <dl>
-          <div><dt>주식</dt><dd>{isBefore ? '73.4%' : '32.4%'}</dd></div>
-          <div><dt>액티브 주식</dt><dd>{isBefore ? '56.9%' : '28.8%'}</dd></div>
-          <div><dt>코어 주식</dt><dd>{isBefore ? '16.5%' : '3.6%'}</dd></div>
-          <div><dt>채권</dt><dd>{isBefore ? '26.6%' : '67.6%'}</dd></div>
-        </dl>
+        <p>{timingCopy}<br />생애주기에 맞는 자산 비중은?</p>
+        <div className="allocation-chart__ratios">
+          <dl className="allocation-chart__stock-total">
+            <div>
+              <dt><i aria-hidden="true" />주식</dt>
+              <dd><AnimatedRatio value={selected.stock} /></dd>
+            </div>
+          </dl>
+          <div className="allocation-chart__stock-detail">
+            <img src={allocationDetailBracket} alt="" aria-hidden="true" />
+            <dl>
+              <div>
+                <dt><i aria-hidden="true" />액티브 주식</dt>
+                <dd><AnimatedRatio value={selected.activeStock} /></dd>
+              </div>
+              <div className="allocation-chart__core-ratio">
+                <dt><i aria-hidden="true" />코어 주식</dt>
+                <dd><AnimatedRatio value={selected.coreStock} /></dd>
+                <div className="allocation-chart__tooltip" role="note">
+                  <span><b>코어 주식</b> 글로벌 성장주식 (자산 증대 기대)</span>
+                  <span><b>액티브 주식</b> 글로벌 주식 (성과 및 위험 관리)</span>
+                </div>
+              </div>
+            </dl>
+          </div>
+          <dl className="allocation-chart__bond-total">
+            <div>
+              <dt><i aria-hidden="true" />채권</dt>
+              <dd><AnimatedRatio value={selected.bond} /></dd>
+            </div>
+          </dl>
+        </div>
       </div>
     </div>
   )
